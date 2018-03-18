@@ -109,7 +109,7 @@ app.post('/create-user', function(req, res){
    });
 });
 
-//LOGGING THE USER IN
+//LOGGING IN THE USER IN
 app.post('/login', function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
@@ -147,11 +147,17 @@ app.post('/login', function(req, res) {
 //TO CHECK IF SESSION IS WORKING OR NOT 
 app.get('check-login', function(req, res) {
    if(req.session && req.session.auth && req.session.auth.userId) {
-       res.send('You are logged in' + req.session.auth.userId.toString());
+       res.send('You are logged in: ' + req.session.auth.userId.toString());
    } 
    else {
        res.send('You are not logged in.');
    }
+});
+
+//LOGOUT 
+app.get('/logout', function(req, res) {
+   delete req.session.auth;
+   res.send('Logged out');
 });
 
 app.get('/', function (req, res) {
