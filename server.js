@@ -12,7 +12,7 @@ var config = {
 	database: 'nikhilsingh050',
 	host:'db.imad.hasura-app.io',
 	port: '5432',
-	password: process.env.DB_PASSSWORD
+	password: 'db-nikhilsingh050-64571'
 };
 
 var pool = new Pool(config);
