@@ -1,7 +1,8 @@
 var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
-
+// Nodejs hashing library 
+var crypto = require('crypto') 
 var app = express();
 app.use(morgan('combined'));
 
@@ -75,6 +76,10 @@ app.get('/articles/:articleName', function(req, res) {
 	});
 });
 
+app.get('/hash/:input', function(req, res){
+    
+    ashedString = 
+}
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
