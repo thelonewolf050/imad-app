@@ -1,16 +1,18 @@
 var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
-// Nodejs hashing library 
-var crypto = require('crypto');
+var Pool = require('pg').Pool;                          // USING POST-GRES FOR DATABASE CONNECTIVITY
+var crypto = require('crypto');                         // Nodejs hashing library 
 var bodyParser = require('body-parser');
-//check for JSON data in POST request
-app.use(bodyParser.json());
-var app = express();
-app.use(morgan('combined'));
+var session = require('express-session');
 
-// USING POST-GRES FOR DATABASE CONNECTIVITY
-var Pool = require('pg').Pool;
+var app = express();
+app.use(bodyParser.json());                             //check for JSON data in POST request
+app.use(morgan('combined'));
+app.use(session({
+    secret: 'someRandomSecretValue',
+    cookie: {maxAge: 1000 * 60 * 60 * 24 * 30}
+}));
 
 var config = {
 	user: 'nikhilsingh050',
@@ -125,10 +127,14 @@ app.post('/login', function(req, res) {
                var salt = dbString.split('$')[2];           //3rd element of array of splitted parts
                var hasdhedPassword = hash(password, salt);  //Creating Hash based on submitted password
                if(hashedPassword === dbString) {
-                   res.send("Login Successful");
-                   
+                  
                    //SET A SESSION
+                   req.session.auth = {userId: result.rows[0].id};
+                   //set cookie with a session id
+                   //internally on the server side , it maps the session id to an object
+                   //{auth: {userId}}
                    
+                   res.send("Login Successful");
                }
                else {
                    res.send(403).send('Invalid username or password!!');
@@ -136,6 +142,16 @@ app.post('/login', function(req, res) {
            }
        }
    });
+});
+
+//TO CHECK IF SESSION IS WORKING OR NOT 
+app.get('check-login', function(req, res) {
+   if(req.session && req.session.auth && req.session.auth.userId) {
+       res.send('You are logged in' + req.session.auth.userId.toString());
+   } 
+   else {
+       res.send('You are not logged in.');
+   }
 });
 
 app.get('/', function (req, res) {
