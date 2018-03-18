@@ -5,6 +5,7 @@ var path = require('path');
 var app = express();
 app.use(morgan('combined'));
 
+// USING POST-GRES FOR DATABASE CONNECTIVITY
 var Pool = require('pg').Pool;
 
 var config = {
@@ -17,6 +18,7 @@ var config = {
 
 var pool = new Pool(config);
 
+//RETURNS HTML PAGE AS A STRING
 function createTemplate(data) {
     var title = data.title;
     var date = data.date;
@@ -54,6 +56,7 @@ function createTemplate(data) {
     return htmlTemplate;
 }
 
+//WHEN THIS ENDPOINT IS REACHED THE FIVEN FUNCTION IS EXECUTED
 app.get('/articles/:articleName', function(req, res) {
 	pool.query("SELECT * FROM article WHERE title = '" + req.params.articleName + "'", function(err, result) {
 		if (err) {
@@ -71,7 +74,6 @@ app.get('/articles/:articleName', function(req, res) {
 		}
 	});
 });
-
 
 
 app.get('/', function (req, res) {
