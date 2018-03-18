@@ -2,7 +2,10 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 // Nodejs hashing library 
-var crypto = require('crypto') 
+var crypto = require('crypto');
+var bodyParser = require('body-parser');
+//check for JSON data in POST request
+app.use(bodyParser.json());
 var app = express();
 app.use(morgan('combined'));
 
@@ -86,7 +89,12 @@ app.get('/hash/:input', function(req, res){
     res.send(hashedString);
 });
 
-app.get('/create-user', function(req, res){
+// when the POST request is received, extract the username and pass from the request body and insert into database
+app.post('/create-user', function(req, res){
+   // JSON POST REQUEST
+   // {"username": "nikhil", "password": "password"}
+   var username = req.body.username;
+   var password = req.body.password;
    var salt= crypto.randomBytes(128).toString('hex');
    var dbString = hash(password, salt);
    pool.query('INSERT INTO "user" (username, password) VALUES ($1, $2)', [username, dbString], function(err, result) {
