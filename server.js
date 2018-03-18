@@ -126,6 +126,9 @@ app.post('/login', function(req, res) {
                var hasdhedPassword = hash(password, salt);  //Creating Hash based on submitted password
                if(hashedPassword === dbString) {
                    res.send("Login Successful");
+                   
+                   //SET A SESSION
+                   
                }
                else {
                    res.send(403).send('Invalid username or password!!');
