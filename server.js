@@ -5,6 +5,18 @@ var path = require('path');
 var app = express();
 app.use(morgan('combined'));
 
+var Pool = require('pg').Pool;
+
+var config = {
+	user: 'nikhilsingh050',
+	database: 'nikhilsingh050',
+	host:'db.imad.hasura-app.io',
+	port: '5432',
+	password: process.env.DB_PASSSWORD
+};
+
+var pool = new Pool(config);
+
 function createTemplate(data) {
     var title = data.title;
     var date = data.date;
@@ -59,6 +71,8 @@ app.get('/articles/:articleName', function(req, res) {
 		}
 	});
 });
+
+
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
