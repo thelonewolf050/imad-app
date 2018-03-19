@@ -1,6 +1,6 @@
 alert('working main js');
 var submit = document.getElementById('submit_btn');
-submit.onclick = function() {
+submit.onClick = function() {
     //create request object
     var request= new XMLHttpRequest();
     
